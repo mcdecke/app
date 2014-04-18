@@ -1,6 +1,6 @@
-var width = 800,
+var width = 320,
 //width of the canvas
-  height = 600,
+  height = 480,
 //height of the canvas
 gLoop,
 points = 0,
