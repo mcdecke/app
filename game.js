@@ -310,6 +310,7 @@ return that;
 
 //GameOver screen
 var GameOver = function(){
+	
     state = false;
 //set state to false
     clearTimeout(gLoop);
@@ -318,13 +319,16 @@ var GameOver = function(){
 //wait for already called frames to be drawn and then clear everything and render text
         clear(); 
         ctx.fillStyle = "Black";
-        ctx.font = "10pt Arial";
-        ctx.fillText("GAME OVER", width / 2 - 60, height / 2 - 50);
-        ctx.fillText("YOUR RESULT:" + points, width / 2 - 60, height / 2 - 30);
-    }, 100);
+        ctx.font = "7pt Arial";
+        ctx.fillText("YOU LOSE!", 100, 100);
+        ctx.fillText("YOUR RESULT:" + points, 100, 120); 
+		state = true; 
+		points = 0;
+		GameLoop();
+		});
+
+		
 };
-
-
 
 var nrOfPlatforms = 5, 
 platforms = [],
