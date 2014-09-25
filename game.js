@@ -11,8 +11,7 @@ state = true;
 
   ctx = c.getContext('2d');
 //and two-dimensional graphic context of the
-//canvas, the only one supported by all 
-//browsers for now
+//canvas
 
 c.width = width;
 c.height = height;
@@ -20,8 +19,7 @@ c.height = height;
 
 var clear = function(){
   ctx.fillStyle = '#d0e7f9';
-//set active color to #d0e... (nice blue)
-//UPDATE - as 'Ped7g' noticed - using clearRect() in here is useless, we cover whole surface of the canvas with blue rectangle two lines below. I just forget to remove that line
+
 //ctx.clearRect(0, 0, width, height);
 //clear whole surface
   ctx.beginPath();
