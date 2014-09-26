@@ -330,7 +330,7 @@ var GameOver = function(){
 
 var nrOfPlatforms = 5, 
 platforms = [],
-platformWidth = 70,
+platformWidth = 70*(1/((points/1000)+1)),
 platformHeight = 20;
 //global (so far) variables are not the best place for storing platform size information, but in case it will be needed to calculate collisions I put it here, not as a Platform attributes
 var generatePlatforms = function(){
