@@ -249,7 +249,7 @@ var GameLoop = function(){
 //switch direction and start moving in the opposite direction
             }
             platform.x += platform.direction * (index / 2) * ~~(points / 100);
-//with speed dependent on the index in platforms[] array (to avoid moving all the displayed platforms with the same speed, it looks ugly) and number of points
+
         }
         platform.draw();
     });
@@ -322,10 +322,12 @@ var GameOver = function(){
         ctx.fillText("YOUR RESULT:" + points, 100, 120); 
 		state = true; 
 		points = 0;
+	// add an event listener to restart gameLoop on click...
+	ctx.addEventListener("click", function(){
 		GameLoop();
 		});
 
-		
+    };
 };
 
 var nrOfPlatforms = 5, 
