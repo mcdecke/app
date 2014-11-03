@@ -1,6 +1,8 @@
-var width = 320,
+// JavaScript Document
+// var jQuery =  required("http://cdnjs.cloudflare.com/ajax/libs/jquery/2.1.1/jquery.js");
+var width = 1000,
 //width of the canvas
-  height = 480,
+	height = 850,
 //height of the canvas
 gLoop,
 points = 0,
@@ -34,41 +36,18 @@ var clear = function(){
 //color selected before
 }
 
-var howManyCircles = 10, circles = [];
 
-for (var i = 0; i < howManyCircles; i++) 
-  circles.push([Math.random() * width, Math.random() * height, Math.random() * 100, Math.random() / 2]);
-//add information about circles into
-//the 'circles' Array. It is x & y positions, 
-//radius from 0-100 and transparency 
-//from 0-0.5 (0 is invisible, 1 no transparency)
-
-var DrawCircles = function(){
-  for (var i = 0; i < howManyCircles; i++) {
-    ctx.fillStyle = 'rgba(255, 255, 255, ' + circles[i][3] + ')';
-//white color with transparency in rgba
-    ctx.beginPath();
-    ctx.arc(circles[i][0], circles[i][1], circles[i][2], 0, Math.PI * 2, true);
-//arc(x, y, radius, startAngle, endAngle, anticlockwise)
-//circle has always PI*2 end angle
-    ctx.closePath();
-    ctx.fill();
-  }
-};
-
-var MoveCircles = function(deltaY){
-  for (var i = 0; i < howManyCircles; i++) {
-    if (circles[i][1] - circles[i][2] > height) {
-//the circle is under the screen so we change
-//informations about it 
-      circles[i][0] = Math.random() * width;
-      circles[i][2] = Math.random() * 100;
-      circles[i][1] = 0 - circles[i][2];
-      circles[i][3] = Math.random() / 2;
-    } else {
-//move circle deltaY pixels down
-      circles[i][1] += deltaY;
-    }
+var DrawGrid = function(){
+  for (var i = 0; i <10; i++) {
+      context.beginPath();
+      context.moveTo(0, 100+100*i);
+      context.lineTo(1000, 100+100*i);
+      context.stroke();
+	  
+	  context.beginPath();
+      context.moveTo(100+100*i, 0);
+      context.lineTo(100+100*i, 1000);
+      context.stroke();
   }
 };
 
@@ -82,14 +61,8 @@ var player = new (function(){
     that.image.src = "angel.png";
 //create new Image
 
-that.isJumping = false;
-that.isFalling = false;
-//state of the object described by bool variables - is it rising or falling?
 
-that.jumpSpeed = 0;
-that.fallSpeed = 0;
-
-    that.width = 65;
+    that.width = 100;
 //width of the single frame
     that.height = 95;
 //height of the single frame
@@ -130,106 +103,58 @@ that.fallSpeed = 0;
 //all that logic above just
 //switch frames every 4 loops  
     }
-	that.jump = function() {
-//initiation of the jump
-if (!that.isJumping && !that.isFalling) {
-//if objects isn't currently jumping or falling (preventing of 'double jumps', or bouncing from the air
-that.fallSpeed = 0;
-that.isJumping = true;
-that.jumpSpeed = 17;
-// initial velocity
-}
-}
 
-that.checkJump = function() {     
-    if (that.Y > height*0.4) {
-//if player is under about half of the screen - let him move
-        that.setPosition(that.X, that.Y - that.jumpSpeed);        
-    } else {
-		if (that.jumpSpeed > 10) points++;
-        MoveCircles(that.jumpSpeed * 0.5); 
-//clouds are in the background, further than platforms and player, so we will move it with half speed
-        
-        platforms.forEach(function(platform, ind){
-            platform.y += that.jumpSpeed;
-
-            if (platform.y > height) {
-//if platform moves outside the screen, we will generate another one on the top
-                var type = ~~(Math.random() * 5);
-                if (type == 0) 
-                    type = 1;
-                else 
-                    type = 0;
-                platforms[ind] = new Platform(Math.random() * (width - platformWidth), platform.y - height, type);
-            }
-        });
-    }
-    
-    
-    that.jumpSpeed--;
-    if (that.jumpSpeed == 0) {
-        that.isJumping = false;
-        that.isFalling = true;
-        that.fallSpeed = 1;
-    }
-
+that.moveDown = function(){
+if (that.X > 0) {
+//check whether the object is inside the screen
+that.setPosition(that.X, that.Y - 100);
 }
-
-that.checkFall = function(){
-//same situation as in checkJump()
-if (that.Y < height - that.height) {
-//check if the object meets the bottom of the screen, if not just change the position and increase fallSpeed (simulation of gravity acceleration)...
-that.setPosition(that.X, that.Y + that.fallSpeed);
-that.fallSpeed++;
-} else {
-if (points == 0) 
-//allow player to step on the floor at he beginning of the game
-            that.fallStop();
-        else 
-            GameOver();
-that.fallStop();
-}
-}
-
-that.fallStop = function(){
-//stop falling, start jumping again
-that.isFalling = false;
-that.fallSpeed = 0;
-that.jump();    
 }
 
 that.moveLeft = function(){
 if (that.X > 0) {
 //check whether the object is inside the screen
-that.setPosition(that.X - 5, that.Y);
+that.setPosition(that.X - 100, that.Y + 100);
 }
 }
 
 that.moveRight = function(){
 if (that.X + that.width < width) {
 //check whether the object is inside the screen
-that.setPosition(that.X + 5, that.Y);
+that.setPosition(that.X + 100, that.Y);
 }
 }
-document.onmousemove = function(e){
-if (player.X + c.offsetLeft > e.pageX) {
-//if mouse is on the left side of the player.
-player.moveLeft();
-} else if (player.X + c.offsetLeft < e.pageX) {
-//or on right?
+document.ondblclick = function(e){
+
+player.moveDown();
+}
+document.onmousedown = function(e){
+
 player.moveRight();
 }
+document.onkeydown = function(e){
+
+player.moveLeft();
 }
 })();
 
 
-player.setPosition(~~((width-player.width)/2),  ~~((height - player.height)/2));
-player.jump();
+
+//
+//var DrawGrid = function(){
+//	 for (i=0; i<10; ++i){
+//	  ctx.rect( 0, 100+(100*i), 100+(100*i), height);
+//	  ctx.rect( 100+(100*i), 0, width, 100+(100*i));
+//	  };
+//	};
+
+/////////////////////////////////////////////////
+/////////////////GAME LOOP///////////////////////
+/////////////////////////////////////////////////
 
 var GameLoop = function(){
   clear();
-  MoveCircles(5);
-  DrawCircles();
+ // DrawGrid();
 
   
   if (player.isJumping) player.checkJump();
@@ -301,6 +226,7 @@ gradient.addColorStop(1, that.secondColor);
 ctx.fillStyle = gradient;
 ctx.fillRect(that.x, that.y, platformWidth, platformHeight);
 //drawing gradient inside rectangular platform
+ 
 };
 
 return that;
@@ -323,11 +249,10 @@ var GameOver = function(){
 		state = true; 
 		points = 0;
 	// add an event listener to restart gameLoop on click...
-	ctx.addEventListener("click", function(){
-		GameLoop();
-		});
-
-    };
+//<!--	ctx.addEventListener("click", function(){
+//		GameLoop();
+//		})-->
+	});
 };
 
 var nrOfPlatforms = 5, 
